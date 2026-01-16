@@ -14,6 +14,41 @@
 
     <!-- Bootstrap + FoodHut main styles -->
 	<link rel="stylesheet" href="assets/css/foodhut.css">
+<style>
+    /* Food card image styling */
+.food-img {
+    width: 100%;
+    height: 230px;          /* same height for all images */
+    object-fit: cover;      /* crop image nicely */
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+/* Make cards equal height */
+.card {
+    height: 100%;
+    transition: 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+}
+
+/* Better spacing for text */
+.card-body h4 {
+    min-height: 48px;
+}
+
+.card-body p {
+    min-height: 70px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+</style>
+    
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
     
