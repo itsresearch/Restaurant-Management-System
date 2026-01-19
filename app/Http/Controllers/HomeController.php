@@ -59,4 +59,16 @@ public function my_home(){
         }
 
     }
+
+    public function my_cart() {
+        $user_id = Auth()->user()->id;
+        $data = Cart::where('user_id',"=", $user_id)->get();
+        return view('home.my_cart',compact('data'));
+    }
+
+    public function remove_cart($id){
+        $data = Cart::find($id);
+        $data->delete();
+        return redirect()->back();
+    }
 }
