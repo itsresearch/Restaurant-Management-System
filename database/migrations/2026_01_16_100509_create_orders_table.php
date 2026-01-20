@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string ('quantity')->nullable();
             $table->string ('price')->nullable();
             $table->string ('image')->nullable();
-            $table->string ('delivery_status')->nullable();
+            $table->string ('delivery_status')->default('InProgress');
             $table->timestamps();
         });
     }

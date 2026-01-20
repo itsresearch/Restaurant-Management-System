@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Food;
+use App\Models\Order;
+use App\Models\Book;
 
 class AdminController extends Controller
 {
@@ -54,4 +56,37 @@ class AdminController extends Controller
         $food->save();
         return redirect('view_food');
     }
+    public function orders(){
+        $data = Order::all();
+        return view('admin.orders', compact('data'));
+    }
+    public function on_the_way($id){
+        $order = Order::find($id);
+        $order->delivery_status = "On the way";
+        $order->save();
+        return redirect()->back();
+
+    }
+
+        public function delivered($id){
+        $order = Order::find($id);
+        $order->delivery_status = "Delivered";
+        $order->save();
+        return redirect()->back();
+
+    }
+
+        public function canceled($id){
+        $order = Order::find($id);
+        $order->delivery_status = "Canceled";
+        $order->save();
+        return redirect()->back();
+
+    }
+    public function reservation(Request $request){
+       $book= Book::all();
+       return view('admin.reservation', compact('book'));
+    }
+
 }
+

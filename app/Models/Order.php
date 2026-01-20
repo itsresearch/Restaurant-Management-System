@@ -10,11 +10,11 @@ class Order extends Model
         protected $fillable = [
             'name',
             'email',
-            'address',
             'phone',
+            'address',
             'title',
-            'quantity',
             'price',
+            'quantity',
             'image',
             'delivery_status',
         ];

@@ -1,48 +1,137 @@
-<x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <x-validation-errors class="mb-4" />
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        @session('status')
-            <div class="mb-4 font-medium text-sm text-green-600">
-                {{ $value }}
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                        url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .login-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .login-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 25px;
+        }
+
+        .form-control {
+            height: 45px;
+        }
+
+        .btn-hotel {
+            background: #b8860b;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .btn-hotel:hover {
+            background: #9c7400;
+            color: #fff;
+        }
+
+        .icon-box {
+            font-size: 45px;
+            color: #b8860b;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <div class="text-center">
+        <div class="icon-box">
+            <i class="fas fa-hotel"></i>
+        </div>
+        <h3 class="login-title">Hotel Management</h3>
+        <p class="login-subtitle">Login to manage your hotel</p>
+    </div>
+
+    <!-- Validation Errors -->
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            {{ $errors->first() }}
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                <input type="email"
+                       name="email"
+                       class="form-control"
+                       value="{{ old('email') }}"
+                       required autofocus>
             </div>
-        @endsession
+        </div>
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                <input type="password"
+                       name="password"
+                       class="form-control"
+                       required>
+            </div>
+        </div>
 
-            <div>
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="remember">
+                <label class="form-check-label">Remember me</label>
             </div>
 
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            </div>
+            @if (Route::has('password.request'))
+                <a href="{{ route('password.request') }}" class="text-decoration-none">
+                    Forgot password?
+                </a>
+            @endif
+        </div>
 
-            <div class="block mt-4">
-                <label for="remember_me" class="flex items-center">
-                    <x-checkbox id="remember_me" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-                </label>
-            </div>
+        <button type="submit" class="btn btn-hotel w-100 py-2">
+            Login
+        </button>
+    </form>
 
-            <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                @endif
+</div>
 
-                <x-button class="ms-4">
-                    {{ __('Log in') }}
-                </x-button>
-            </div>
-        </form>
-    </x-authentication-card>
-</x-guest-layout>
+</body>
+</html>

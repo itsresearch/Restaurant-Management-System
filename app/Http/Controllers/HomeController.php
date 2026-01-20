@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Food;
+use App\Models\Order;
 use App\Models\Cart;
+use App\Models\Book;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -29,7 +31,12 @@ public function my_home(){
         }
 
         else {
-            return view('admin.index');
+
+        $total_user = User::where('usertype','=', 'user')->count();
+        $total_food = Food::count();
+        $total_order = Order::count();
+        $total_delivered = Order::where('delivery_status','=','delivered')->count();
+            return view('admin.index',compact('total_user','total_food','total_order','total_delivered'));
         }
         }
     }
@@ -57,6 +64,9 @@ public function my_home(){
 
             return redirect()->back();
         }
+        else{
+            return redirect('login');
+        }
 
     }
 
@@ -71,4 +81,52 @@ public function my_home(){
         $data->delete();
         return redirect()->back();
     }
+
+ public function confirm_order(Request $request)
+{
+    $user = auth()->user();
+    $userId = $user->id;
+
+    $cartItems = Cart::where('user_id', $userId)->get();
+
+    foreach ($cartItems as $cart) {
+
+        $order = new Order();
+
+        $order->name = $request->name;
+        $order->email = $request->email;
+        $order->phone = $request->phone;
+        $order->address = $request->address;
+
+        $order->title = $cart->title;
+        $order->quantity = $cart->quantity;
+        $order->price = $cart->price;
+        $order->image = $cart->image;
+
+        $order->save();
+
+        $data = Cart::find($cart->id);
+        $data->delete();
+    }
+
+    return redirect()->back()->with('message', 'Order Confirmed Successfully');
 }
+    public function book_table(Request $request){
+        $request->validate([
+            'phone' => 'required|string',
+            'a_guest' => 'required|integer|min:1|max:20',
+            'time' => 'required',
+            'date' => 'required|date|after:today',
+        ]);
+
+            $data = new Book;
+            $data->phone = $request->phone;
+            $data->guest = $request->a_guest;
+            $data->time = $request->time;
+            $data->date = $request->date;
+            $data -> save();
+            return redirect()->back();
+        }
+
+}
+
