@@ -17,5 +17,6 @@ class Order extends Model
             'quantity',
             'image',
             'delivery_status',
+            'user_id',
         ];
 }

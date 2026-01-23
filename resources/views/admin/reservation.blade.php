@@ -1,91 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head> 
     <meta charset="utf-8">
     <title>Admin | Table Bookings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="admin/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="admin/vendor/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="admin/css/style.default.css">
-    <link rel="stylesheet" href="admin/css/custom.css">
-
-    <style>
-        .page-content {
-            padding: 30px;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              base: '#0f172a',
+              panel: '#111827',
+              card: '#1f2937',
+              accent: '#f59e0b',
+              accent2: '#fb7185',
+              muted: '#9ca3af'
+            },
+            fontFamily: {
+              sans: ['Inter', 'DM Sans', 'system-ui', 'sans-serif']
+            }
+          }
         }
-
-        .card {
-            background: #1f1f1f;
-            border-radius: 10px;
-        }
-
-        table th {
-            background: #343a40;
-            color: #fff;
-            text-align: center;
-        }
-
-        table td {
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .badge {
-            font-size: 14px;
-            padding: 6px 12px;
-        }
-    </style>
+      }
+    </script>
 </head>
-
-<body>
-
+<body class="bg-base text-white">
 @include('admin.header')
-
-<div class="d-flex align-items-stretch">
-
+<div class="flex min-h-screen">
     @include('admin.sidebar')
-
-    <div class="page-content">
-
-        <h2 class="mb-4">📅 Table Bookings</h2>
-
-        <div class="card shadow">
-            <div class="card-body">
-
-                <div class="table-responsive">
-                    <table class="table table-dark table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Phone Number</th>
-                                <th>No. of Guests</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach($book as $booking)
-                            <tr>
-                                <td>{{ $booking->phone }}</td>
-                                <td>{{ $booking->guest }}</td>
-                                <td>{{ $booking->date }}</td>
-                                <td>{{ $booking->time }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-
-                    </table>
-                </div>
-
+    <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+                <p class="text-xs uppercase tracking-[0.08em] text-white/60">Bookings</p>
+                <h2 class="text-2xl font-semibold">Table reservations</h2>
             </div>
         </div>
 
-    </div>
+        <div class="rounded-2xl border border-white/10 bg-card p-4 shadow-lg shadow-black/40">
+            <div class="overflow-auto">
+                <table class="min-w-full text-sm">
+                    <thead class="text-left text-white/70">
+                        <tr class="border-b border-white/10">
+                            <th class="py-3 pr-4">Name</th>
+                            <th class="py-3 pr-4">Phone Number</th>
+                            <th class="py-3 pr-4">Guests</th>
+                            <th class="py-3 pr-4">Date</th>
+                            <th class="py-3 pr-4">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        @foreach($book as $booking)
+                        <tr>
+                            <td class="py-3 pr-4 font-semibold">{{ $booking->name }}</td>
+                            <td class="py-3 pr-4 font-semibold">{{ $booking->phone }}</td>
+                            <td class="py-3 pr-4">{{ $booking->guest }}</td>
+                            <td class="py-3 pr-4 text-white/70">{{ $booking->date }}</td>
+                            <td class="py-3 pr-4 text-white/70">{{ $booking->time }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
 </div>
-
-@include('admin.script')
-
 </body>
 </html>

@@ -3,139 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <title>Hotel Register</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            min-height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
-                        url('https://images.unsplash.com/photo-1566073771259-6a8506099945');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .register-card {
-            background: #fff;
-            border-radius: 15px;
-            padding: 40px;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-        }
-
-        .register-title {
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .register-subtitle {
-            font-size: 14px;
-            color: #6c757d;
-            margin-bottom: 25px;
-        }
-
-        .form-control {
-            height: 45px;
-        }
-
-        .btn-hotel {
-            background: #b8860b;
-            color: #fff;
-            font-weight: 600;
-            border-radius: 8px;
-        }
-
-        .btn-hotel:hover {
-            background: #9c7400;
-            color: #fff;
-        }
-
-        .icon-box {
-            font-size: 45px;
-            color: #b8860b;
-            margin-bottom: 15px;
-        }
-
-        .small-link {
-            font-size: 14px;
-        }
-    </style>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-<body>
+<body class="min-h-screen flex items-center justify-center bg-cover bg-center"
+      style="background-image: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb');">
 
-<div class="register-card">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8">
 
-    <div class="text-center">
-        <div class="icon-box">
-            <i class="fas fa-hotel"></i>
-        </div>
-        <h3 class="register-title">Create Account</h3>
-        <p class="register-subtitle">Join our Hotel Management System</p>
-    </div>
-
-    <!-- Validation Errors -->
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            {{ $errors->first() }}
-        </div>
-    @endif
-
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
-
-        <div class="mb-3">
-            <label class="form-label">Full Name</label>
-            <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <div class="text-yellow-600 text-5xl mb-3">
+                <i class="fas fa-hotel"></i>
+            </div>
+            <h2 class="text-2xl font-bold">Create Account</h2>
+            <p class="text-gray-500 text-sm">Join and manage your hotel</p>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Email Address</label>
-            <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+        <!-- Validation Errors -->
+        @if ($errors->any())
+            <div class="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
+        <!-- Google Register -->
+        <a href="{{ route('google.login') }}"
+           class="flex items-center justify-center gap-3 border border-gray-300 rounded-lg py-2 font-semibold text-gray-700 hover:bg-gray-100 transition mb-5">
+            <img src="https://developers.google.com/identity/images/g-logo.png"
+                 alt="Google"
+                 class="w-5 h-5">
+            Sign up with Google
+        </a>
+
+        <!-- Divider -->
+        <div class="flex items-center my-5">
+            <div class="flex-grow h-px bg-gray-300"></div>
+            <span class="px-3 text-sm text-gray-500">OR</span>
+            <div class="flex-grow h-px bg-gray-300"></div>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Phone</label>
-            <input type="text" name="phone" class="form-control" value="{{ old('phone') }}" required>
-        </div>
+        <!-- Register Form -->
+        <form method="POST" action="{{ route('register') }}" class="space-y-4">
+            @csrf
 
-        <div class="mb-3">
-            <label class="form-label">Address</label>
-            <input type="text" name="address" class="form-control" value="{{ old('address') }}" required>
-        </div>
+            <!-- Name -->
+            <div>
+                <label class="block text-sm font-medium mb-1">Full Name</label>
+                <div class="flex items-center border rounded-lg px-3">
+                    <i class="fa fa-user text-gray-400"></i>
+                    <input type="text"
+                           name="name"
+                           value="{{ old('name') }}"
+                           required
+                           autofocus
+                           class="w-full p-2 outline-none text-sm">
+                </div>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input type="password" name="password" class="form-control" required>
-        </div>
+            <!-- Email -->
+            <div>
+                <label class="block text-sm font-medium mb-1">Email</label>
+                <div class="flex items-center border rounded-lg px-3">
+                    <i class="fa fa-envelope text-gray-400"></i>
+                    <input type="email"
+                           name="email"
+                           value="{{ old('email') }}"
+                           required
+                           class="w-full p-2 outline-none text-sm">
+                </div>
+            </div>
 
-        <div class="mb-4">
-            <label class="form-label">Confirm Password</label>
-            <input type="password" name="password_confirmation" class="form-control" required>
-        </div>
+            <!-- Password -->
+            <div>
+                <label class="block text-sm font-medium mb-1">Password</label>
+                <div class="flex items-center border rounded-lg px-3">
+                    <i class="fa fa-lock text-gray-400"></i>
+                    <input type="password"
+                           name="password"
+                           required
+                           class="w-full p-2 outline-none text-sm">
+                </div>
+            </div>
 
-        <button type="submit" class="btn btn-hotel w-100 py-2">
-            Register
-        </button>
+            <!-- Confirm Password -->
+            <div>
+                <label class="block text-sm font-medium mb-1">Confirm Password</label>
+                <div class="flex items-center border rounded-lg px-3">
+                    <i class="fa fa-lock text-gray-400"></i>
+                    <input type="password"
+                           name="password_confirmation"
+                           required
+                           class="w-full p-2 outline-none text-sm">
+                </div>
+            </div>
 
-        <div class="text-center mt-3">
-            <a href="{{ route('login') }}" class="small-link text-decoration-none">
-                Already have an account? Login
+            <!-- Register Button -->
+            <button type="submit"
+                    class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 rounded-lg transition">
+                Register
+            </button>
+        </form>
+
+        <!-- Login Link -->
+        <p class="text-center text-sm text-gray-600 mt-5">
+            Already have an account?
+            <a href="{{ route('login') }}"
+               class="text-yellow-600 font-semibold hover:underline">
+                Login
             </a>
-        </div>
-    </form>
+        </p>
 
-</div>
+    </div>
 
 </body>
 </html>

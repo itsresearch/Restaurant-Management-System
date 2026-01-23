@@ -1,131 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Admin | Food List</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="admin/vendor/bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome CSS-->
-    <link rel="stylesheet" href="admin/vendor/font-awesome/css/font-awesome.min.css">
-    <!-- Custom Font Icons CSS-->
-    <link rel="stylesheet" href="admin/css/font.css">
-    <!-- Google fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:300,400,700">
-    <!-- Theme CSS -->
-    <link rel="stylesheet" href="admin/css/style.default.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="admin/css/custom.css">
-
-    <style>
-        .page-header {
-            background: #1f2327;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            margin: 20px;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              base: '#0f172a',
+              panel: '#111827',
+              card: '#1f2937',
+              accent: '#f59e0b',
+              accent2: '#fb7185',
+              muted: '#9ca3af'
+            },
+            fontFamily: {
+              sans: ['Inter', 'DM Sans', 'system-ui', 'sans-serif']
+            }
+          }
         }
-
-        .page-header h2 {
-            color: #fff;
-            margin: 0;
-        }
-
-        .table-wrapper {
-            margin: 20px;
-            background: #1f2327;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            color: #fff;
-        }
-
-        thead {
-            background: #2c3035;
-        }
-
-        th, td {
-            padding: 14px;
-            text-align: center;
-            border-bottom: 1px solid #3d4248;
-        }
-
-        th {
-            text-transform: uppercase;
-            font-size: 13px;
-            letter-spacing: 1px;
-            color: #cfcfcf;
-        }
-
-        tr:hover {
-            background: #2a2f34;
-        }
-
-        img.food-img {
-            width: 80px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-    </style>
+      }
+    </script>
 </head>
 
-<body>
+<body class="bg-base text-white">
 
 @include('admin.header')
 
-<div class="d-flex align-items-stretch">
+<div class="flex min-h-screen">
 
     @include('admin.sidebar')
 
-    <div class="page-content">
+    <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
-        <div class="page-header">
-            <h2>Food List</h2>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+                <p class="text-xs uppercase tracking-[0.08em] text-white/60">Menu</p>
+                <h2 class="text-2xl font-semibold">Food List</h2>
+            </div>
+            <a href="{{ url('add_food') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-br from-accent2 to-accent text-sm font-bold text-base/90 hover:shadow-lg hover:shadow-accent/30">Add Food</a>
         </div>
 
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Food Title</th>
-                        <th>Details</th>
-                        <th>Price</th>
-                        <th>Image</th>
-                        <th>Delete</th>
-                        <th>Update</th>
-                    </tr>
-                </thead>
+        <div class="rounded-2xl border border-white/10 bg-card p-4 shadow-lg shadow-black/40">
+            <div class="overflow-auto">
+                <table class="min-w-full text-sm">
+                    <thead class="text-left text-white/70">
+                        <tr class="border-b border-white/10">
+                            <th class="py-3 pr-4">Food Title</th>
+                            <th class="py-3 pr-4">Details</th>
+                            <th class="py-3 pr-4">Price</th>
+                            <th class="py-3 pr-4">Image</th>
+                            <th class="py-3 pr-4">Actions</th>
+                        </tr>
+                    </thead>
 
-                <tbody>
-    
+                    <tbody class="divide-y divide-white/5">
                       @foreach($data as $data)
-                    <tr>
-                        <td>{{$data->title}}</td>
-                        <td>{{$data->detail}}</td>
-                        <td>{{$data->price}}</td>
-                        <td><img  width="150" src="{{ asset('storage/'.$data->image) }}" alt=""></td>
-                        <td>
-                          <a href="{{url('delete_food',$data->id)}}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
-                        </td>
-                        <td><a class="btn  btn-warning" href="{{url('update_food',$data->id)}}">Update </a></td>
-                    </tr>
+                        <tr>
+                            <td class="py-3 pr-4 font-semibold">{{ $data->title }}</td>
+                            <td class="py-3 pr-4 text-white/70">{{ $data->detail }}</td>
+                            <td class="py-3 pr-4">Rs {{ $data->price }}</td>
+                            <td class="py-3 pr-4">
+                                <img class="w-20 h-14 object-cover rounded-lg border border-white/10" src="{{ asset('storage/'.$data->image) }}" alt="">
+                            </td>
+                            <td class="py-3 pr-4 space-x-2">
+                              <a href="{{url('delete_food',$data->id)}}" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent2" onclick="return confirm('Are you sure?')">Delete</a>
+                              <a class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent" href="{{url('update_food',$data->id)}}">Update</a>
+                            </td>
+                        </tr>
                     @endforeach
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-    </div>
+    </main>
 </div>
-
-@include('admin.script')
 
 </body>
 </html>

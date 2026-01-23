@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\GoogleController;
+
 
 
 route::get('/',[HomeController::class,'my_home']);
@@ -31,6 +33,9 @@ route::get('/delivered/{id}',[AdminController::class,'delivered']);
 route::get('/canceled/{id}',[AdminController::class,'canceled']);
 route::post('/book_table',[HomeController::class,'book_table']);
 route::get('/reservation',[AdminController::class,'reservation']);
+
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
 
 
 route::get('/home',[HomeController::class,'index']);

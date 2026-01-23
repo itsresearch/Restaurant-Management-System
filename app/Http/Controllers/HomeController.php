@@ -10,6 +10,8 @@ use App\Models\Cart;
 use App\Models\Book;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderNotification;
 
 class HomeController extends Controller
 {
@@ -62,9 +64,18 @@ public function my_home(){
 
             $data->save();
 
-            return redirect()->back();
-        }
+           
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => 'Item added to cart successfully!']);
+            }
+
+            return redirect('/#blog')->with('message', 'Item added to cart successfully!');
+            }
+
         else{
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Please login first.']);
+            }
             return redirect('login');
         }
 
@@ -82,21 +93,23 @@ public function my_home(){
         return redirect()->back();
     }
 
- public function confirm_order(Request $request)
+
+public function confirm_order(Request $request)
 {
     $user = auth()->user();
     $userId = $user->id;
 
     $cartItems = Cart::where('user_id', $userId)->get();
 
+    Mail::to($user->email)->send(new OrderNotification($cartItems, $user));
+
     foreach ($cartItems as $cart) {
-
         $order = new Order();
-
         $order->name = $request->name;
         $order->email = $request->email;
         $order->phone = $request->phone;
         $order->address = $request->address;
+        $order->user_id = $userId;
 
         $order->title = $cart->title;
         $order->quantity = $cart->quantity;
@@ -105,21 +118,23 @@ public function my_home(){
 
         $order->save();
 
-        $data = Cart::find($cart->id);
-        $data->delete();
+        $cart->delete(); 
     }
 
-    return redirect()->back()->with('message', 'Order Confirmed Successfully');
+    return view('home.order_success', ['orders' => $cartItems, 'user' => $user]);
 }
     public function book_table(Request $request){
         $request->validate([
+            'name' => 'required|string',
             'phone' => 'required|string',
-            'a_guest' => 'required|integer|min:1|max:20',
+            'a_guest' => 'required|integer|min:1|max:10',
             'time' => 'required',
             'date' => 'required|date|after:today',
         ]);
 
             $data = new Book;
+            $data->name = $request->name;
+            $data->phone = $request->phone;
             $data->phone = $request->phone;
             $data->guest = $request->a_guest;
             $data->time = $request->time;

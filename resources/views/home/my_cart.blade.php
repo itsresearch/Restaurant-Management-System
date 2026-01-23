@@ -2,197 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Food Hut</title>
+    <title>My Cart</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-    <style>
-        body {
-            background-color: #121212;
-            color: #fff;
+    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: '#0c0f14',
+                        panel: '#111621',
+                        card: '#151b27',
+                        accent: '#f59e0b',
+                        accent2: '#fb7185',
+                        muted: '#9aa4b5'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'DM Sans', 'system-ui', 'sans-serif'],
+                        display: ['Playfair Display', 'DM Sans', 'serif']
+                    }
+                }
+            }
         }
-
-        /* Navbar spacing fix */
-        .page-offset {
-            padding-top: 90px;
-        }
-
-        /* Food Image */
-        .food-img {
-            width: 100%;
-            height: 230px;
-            object-fit: cover;
-            border-radius: 10px 10px 0 0;
-        }
-
-        /* Food Card */
-        .food-card {
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .food-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
-        }
-
-        .price-badge {
-            font-size: 18px;
-            padding: 6px 14px;
-        }
-
-        .food-title {
-            min-height: 48px;
-            font-weight: 600;
-        }
-
-        .food-desc {
-            min-height: 70px;
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        /* Cart summary */
-        .cart-total {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        /* Order Form */
-        .order-card {
-            background: #1e1e1e;
-            border-radius: 10px;
-            padding: 25px;
-        }
-
-        label {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        input {
-            background: #2a2a2a !important;
-            color: #fff !important;
-            border: none !important;
-        }
-
-        input:focus {
-            box-shadow: none !important;
-            border: 1px solid #007bff !important;
-        }
-    </style>
+    </script>
 </head>
+<body class="bg-base text-white">
+    <header class="fixed top-0 inset-x-0 z-50 bg-base/90 backdrop-blur border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a class="flex items-center gap-3 text-white font-semibold" href="{{ url('/') }}">
+                <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent2 to-accent grid place-items-center text-base font-bold">RM</span>
+                <div class="leading-tight">
+                    <div class="text-sm uppercase tracking-wide text-white/70">Restaurant</div>
+                    <div class="text-lg">Management</div>
+                </div>
+            </a>
+            <a href="{{ url('/') }}" class="px-4 py-2 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-accent">Back to home</a>
+        </div>
+    </header>
 
-<body>
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <p class="text-xs uppercase tracking-[0.08em] text-white/70">Your order</p>
+                <h1 class="text-3xl font-display leading-tight">Review cart</h1>
+            </div>
+            <span class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-white/80">
+                <span class="ti-shopping-cart text-accent"></span>
+                {{ count($data) }} items
+            </span>
+        </div>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">Food Hut</a>
-    <button class="navbar-toggler" data-toggle="collapse" data-target="#nav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="nav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="#foods">Foods</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
-        </ul>
-    </div>
-</nav>
-
-<div class="page-offset"></div>
-
-<!-- FOOD SECTION -->
-<section id="foods" class="container py-5">
-    <h2 class="text-center mb-5">🍽 Our Foods</h2>
-
-    <div class="row">
         @php $total_price = 0; @endphp
 
-        @foreach($data as $item)
-        <div class="col-md-4 mb-4">
-            <div class="card bg-dark border food-card">
-                <img src="{{ asset('storage/'.$item->image) }}" class="food-img" alt="food">
+        <div class="grid lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 rounded-2xl border border-white/10 bg-card p-4 shadow-lg shadow-black/40 space-y-4">
+                @foreach($data as $item)
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-center border-b border-white/5 pb-4">
+                    <img src="{{ asset('storage/'.$item->image) }}" class="w-full h-28 object-cover rounded-xl border border-white/10">
+                    <div class="sm:col-span-2">
+                        <div class="text-lg font-semibold">{{ $item->title }}</div>
+                        <p class="text-sm text-white/70 line-clamp-2">{{ $item->detail }}</p>
+                    </div>
+                    <div class="flex sm:flex-col sm:items-end justify-between gap-2">
+                        <div class="text-base font-semibold">Rs {{ $item->price }}</div>
+                        <a onclick="return confirm('Are you sure to remove this item?')"
+                           href="{{ url('remove_cart',$item->id) }}"
+                           class="text-sm text-accent hover:underline">Remove</a>
+                    </div>
+                </div>
+                @php $total_price += $item->price; @endphp
+                @endforeach
+            </div>
 
-                <div class="card-body text-center">
-                    <span class="badge badge-primary price-badge mb-3">
-                        Rs {{ $item->price }}
-                    </span>
+            <div class="space-y-4">
+                <div class="rounded-2xl border border-white/10 bg-card p-4 shadow-lg shadow-black/40">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm text-white/70">Subtotal</span>
+                        <span class="text-lg font-semibold">Rs {{ $total_price }}</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-sm text-white/70">Service</span>
+                        <span class="text-sm text-white/70">Included</span>
+                    </div>
+                    <div class="border-t border-white/10 mt-3 pt-3 flex items-center justify-between">
+                        <span class="text-sm font-semibold">Total</span>
+                        <span class="text-xl font-bold">Rs {{ $total_price }}</span>
+                    </div>
+                </div>
 
-                    <h4 class="food-title">{{ $item->title }}</h4>
-                    <p class="food-desc">{{ $item->detail }}</p>
-
-                    <a onclick="return confirm('Are you sure to remove this item?')"
-                       href="{{ url('remove_cart',$item->id) }}"
-                       class="btn btn-outline-warning btn-sm mt-2">
-                        Remove from Cart
-                    </a>
+                <div class="rounded-2xl border border-white/10 bg-card p-4 shadow-lg shadow-black/40">
+                    <h3 class="text-lg font-semibold mb-3">Confirm your order</h3>
+                    @if (session()->has('message'))
+                        <div class="mb-3 px-3 py-2 rounded-lg bg-emerald-500/10 text-emerald-200 border border-emerald-400/30">
+                            {{ session()->get('message') }}
+                        </div>
+                    @endif
+                    <form action="{{url('confirm_order')}}" method="POST" class="space-y-3">
+                        @csrf
+                        <input type="text" name="name" class="w-full rounded-xl bg-base/70 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-accent focus:ring-2 focus:ring-accent/30" value="{{Auth()->user()->name}}" required placeholder="Name">
+                        <input type="email" name="email" class="w-full rounded-xl bg-base/70 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-accent focus:ring-2 focus:ring-accent/30" value="{{Auth()->user()->email}}" required placeholder="Email">
+                        <input type="number" name="phone" class="w-full rounded-xl bg-base/70 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-accent focus:ring-2 focus:ring-accent/30" value="{{Auth()->user()->phone}}" required placeholder="Phone">
+                        <input type="text" name="address" class="w-full rounded-xl bg-base/70 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-accent focus:ring-2 focus:ring-accent/30" value="{{Auth()->user()->address}}" required placeholder="Address">
+                        <button type="submit" class="w-full px-4 py-3 rounded-xl bg-gradient-to-br from-accent2 to-accent text-base font-bold text-base/90 hover:shadow-lg hover:shadow-accent/30">
+                            Confirm Order
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
+    </main>
 
-        @php $total_price += $item->price; @endphp
-        @endforeach
-    </div>
-
-    <!-- CART TOTAL -->
-    <div class="cart-total">
-        <h4>Total Cart Price</h4>
-        <h2 class="text-success">$ {{ $total_price }}</h2>
-    </div>
-
-    <!-- ORDER FORM -->
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-6">
-            <div class="order-card">
-                <h4 class="text-center mb-4">Confirm Your Order</h4>
-
-                <form action="{{url('confirm_order')}}" method="POST">
-                    @csrf
-
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" name="name" class="form-control" value="{{Auth()->user()->name}}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" class="form-control" value="{{Auth()->user()->email}}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Phone</label>
-                        <input type="number" name="phone" class="form-control" value="{{Auth()->user()->phone}}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Address</label>
-                        <input type="text" name="address" class="form-control"  value="{{Auth()->user()->address}}" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block">
-                        Confirm Order
-                    </button>
-                </form>
-            </div>
+    <footer class="border-t border-white/10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-white/60 text-sm flex justify-between items-center">
+            <span>© {{ date('Y') }} Restaurant Manager</span>
+            <a href="{{ url('/') }}" class="hover:text-white">Back to menu</a>
         </div>
-    </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="bg-dark text-center py-3 mt-5">
-    <small>© {{ date('Y') }} Food Hut. All rights reserved.</small>
-</footer>
-
-<!-- Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
+    </footer>
 </body>
 </html>

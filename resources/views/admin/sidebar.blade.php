@@ -1,25 +1,31 @@
-      <nav id="sidebar">
-        <!-- Sidebar Header-->
-        <div class="sidebar-header d-flex align-items-center">
-          <div class="avatar"><img src="admin/img/avatar-6.jpg" alt="..." class="img-fluid rounded-circle"></div>
-          <div class="title">
-            <h1 class="h5">Research Devkota</h1>
-            <p>Web Designer</p>
-          </div>
-        </div>
-        <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
-        <ul class="list-unstyled">
-                <li class="active"><a href="{{url('home')}}"> <i class="icon-home"></i>Home </a></li>
-
-                <li><a href="forms.html"> <i class="icon-padnote"></i>Forms </a></li>
-                <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Food</a>
-                  <ul id="exampledropdownDropdown" class="collapse list-unstyled ">
-                    <li><a href="{{url('add_food')}}">Add Food</a></li>
-                    <li><a href="{{url('view_food')}}">View Food</a></li>
-                  </ul>
-                </li>
-                <li><a href="{{url('orders')}}"> <i class="icon-logout"></i>Orders </a></li>
-                <li><a href="{{url('reservation')}}"> <i class="icon-logout"></i>Reservation </a></li>
-        </ul><span class="heading">Extras</span>
-        
-      </nav>
+<aside class="w-64 bg-panel border-r border-white/10 min-h-screen hidden md:flex flex-col">
+  <div class="px-4 py-5 border-b border-white/10">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-accent2 to-accent grid place-items-center text-base font-bold text-base/90">AD</div>
+      <div>
+        <p class="text-sm font-semibold">Admin Portal</p>
+        <p class="text-xs text-white/60">Restaurant Manager</p>
+      </div>
+    </div>
+  </div>
+  <nav class="flex-1 px-3 py-4 space-y-1 text-sm font-semibold text-white/70">
+    <a href="{{ url('home') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">
+      <span class="ti-home"></span> Home
+    </a>
+    <div class="pt-2">
+      <p class="px-3 text-xs uppercase tracking-[0.08em] text-white/50 mb-2">Food</p>
+      <a href="{{ url('add_food') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">
+        <span class="ti-plus"></span> Add Food
+      </a>
+      <a href="{{ url('view_food') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">
+        <span class="ti-layout-grid2"></span> View Food
+      </a>
+    </div>
+    <a href="{{ url('orders') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">
+      <span class="ti-receipt"></span> Orders
+    </a>
+    <a href="{{ url('reservation') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">
+      <span class="ti-calendar"></span> Reservation
+    </a>
+  </nav>
+</aside>

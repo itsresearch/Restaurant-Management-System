@@ -1,55 +1,54 @@
-    <!-- book a table Section  -->
-    <div class="container-fluid has-bg-overlay text-center text-light has-height-lg middle-items" id="book-table">
-        <div class="">
-            <h2 class="section-title mb-5">BOOK A TABLE</h2>
-            <form action="{{url('book_table')}}" method="POST">
+<div class="grid lg:grid-cols-5 gap-6">
+    <div class="lg:col-span-2 rounded-2xl border border-white/10 bg-gradient-to-br from-accent/10 to-accent2/10 p-6 shadow-lg shadow-black/40">
+        <p class="text-xs uppercase tracking-[0.08em] text-white/70">Book a table</p>
+        <h3 class="text-2xl font-display leading-tight mt-2 mb-4">Reserve your experience</h3>
+        <form action="{{url('book_table')}}" method="POST" class="space-y-3">
             @csrf
-            <div class="row mb-5">
-                <div class="col-sm-6 col-md-3 col-xs-12 my-2">
-                    <input type="text" id="booktable" class="form-control form-control-lg custom-form-control" name="phone" placeholder="Phone Number">
-                </div>
-                <div class="col-sm-6 col-md-3 col-xs-12 my-2">
-                    <input type="number" id="booktable" class="form-control form-control-lg custom-form-control" name="a_guest" placeholder="NUMBER OF GUESTS" max="20" min="0">
-                </div>
-                <div class="col-sm-6 col-md-3 col-xs-12 my-2">
-                    <input type="time" id="booktable" class="form-control form-control-lg custom-form-control" name="time" placeholder="Time">
-                </div>
-                <div class="col-sm-6 col-md-3 col-xs-12 my-2">
-                    <input type="date" id="booktable" class="form-control form-control-lg custom-form-control" name="date" placeholder="Date">
-                </div>
+            <input type="text" name="name" placeholder="Name" class="w-full rounded-xl bg-base/70 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-accent focus:ring-2 focus:ring-accent/30">
+            
+            <input type="text" name="phone" placeholder="Phone Number" class="w-full rounded-xl bg-base/70 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-accent focus:ring-2 focus:ring-accent/30">
+            <input type="number" name="a_guest" min="1" max="20" placeholder="Number of guests" class="w-full rounded-xl bg-base/70 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-accent focus:ring-2 focus:ring-accent/30">
+            <div class="grid grid-cols-2 gap-3">
+                <input type="time" name="time" class="rounded-xl bg-base/70 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-accent focus:ring-2 focus:ring-accent/30">
+                <input type="date" name="date" class="rounded-xl bg-base/70 border border-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-accent focus:ring-2 focus:ring-accent/30">
             </div>
-            <input type="submit" class="btn btn-primary btn-lg" value="Book Now">
-            </form>
-        </div>
+            <button type="submit" class="w-full px-4 py-3 rounded-xl bg-gradient-to-br from-accent2 to-accent text-base font-bold text-base/90 hover:shadow-lg hover:shadow-accent/30">Book Now</button>
+        </form>
     </div>
 
-    <!-- BLOG Section  -->
-    <div id="blog" class="container-fluid bg-dark text-light py-5 text-center wow fadeIn">
-        <h2 class="section-title py-5">Our Foods</h2>
+    <div class="lg:col-span-3">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <p class="text-xs uppercase tracking-[0.08em] text-white/70">Our menu</p>
+                <h2 class="text-3xl font-display leading-tight">Guest favorites</h2>
+            </div>
+            @if (session()->has('message'))
+                <div class="text-sm px-3 py-2 rounded-full bg-emerald-500/10 text-emerald-200 border border-emerald-400/30">
+                    {{ session()->get('message') }}
+                </div>
+            @endif
+        </div>
 
-        <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="foods" role="tabpanel" aria-labelledby="pills-home-tab">
-                <div class="row">
-                    @foreach($data as $data)
-                    <div class="col-md-4">
-                        <div class="card bg-transparent border my-3 my-md-0">
-                            <img height="200" src="{{ asset('storage/'.$data->image) }}" alt="">
-                            <div class="card-body">
-                                <h1 class="text-center mb-4"><a href="#" class="badge badge-primary">{{$data->price}}</a></h1>
-                                <h4 class="pt20 pb20">{{$data->title}}</h4>
-                                <p class="text-white">{{$data->detail}}</p>
-                            </div>
-                            <form action="{{url('add_cart',$data->id)}}" method="post">
-                                @csrf
-                            <input value="1" type="number" min="1" name="qty" required>
-                            
-                            <input type="submit" value="Order Now"   class="btn btn-primary" >
-                            </form>
-                        </div>
-                    </div>
-                    @endforeach
+        <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            @foreach($data as $data)
+            <div class="relative rounded-2xl border border-white/10 bg-card shadow-lg shadow-black/40 overflow-hidden flex flex-col">
+                <div class="h-40">
+                    <img src="{{ asset('storage/'.$data->image) }}" alt="{{ $data->title }}" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-base/90 border border-white/10 text-sm font-semibold">
+                    Rs {{ $data->price }}
+                </div>
+                <div class="p-4 flex flex-col gap-2 flex-1">
+                    <h4 class="text-lg font-semibold">{{ $data->title }}</h4>
+                    <p class="text-sm text-white/70 line-clamp-3">{{ $data->detail }}</p>
+                    <form action="{{url('add_cart',$data->id)}}" method="post" class="mt-auto flex items-center gap-2 pt-2">
+                        @csrf
+                        <input value="1" type="number" min="1" name="qty" required class="w-20 rounded-lg bg-base/70 border border-white/10 px-3 py-2 text-white placeholder-white/50 focus:border-accent focus:ring-2 focus:ring-accent/30">
+                        <button type="submit" class="flex-1 px-4 py-2 rounded-lg bg-gradient-to-br from-accent2 to-accent text-sm font-bold text-base/90 hover:shadow-md hover:shadow-accent/30">Add to cart</button>
+                    </form>
                 </div>
             </div>
-            </div>
+            @endforeach
         </div>
     </div>
+</div>
