@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Food;
 use App\Models\Order;
 use App\Models\Book;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderNotification;
 
 class AdminController extends Controller
 {
@@ -64,6 +67,21 @@ class AdminController extends Controller
         $order = Order::find($id);
         $order->delivery_status = "On the way";
         $order->save();
+
+        // Send email notification
+        $user = $order->user_id ? User::find($order->user_id) : null;
+        $recipientEmail = $user ? $user->email : $order->email;
+        if ($recipientEmail) {
+            try {
+                Mail::to($recipientEmail)->send(new OrderNotification(collect([$order]), $user, 'on_the_way', $recipientEmail));
+                \Log::info("Email sent to {$recipientEmail} for order {$id} status: on_the_way");
+            } catch (\Exception $e) {
+                \Log::error("Failed to send email for order {$id}: " . $e->getMessage());
+            }
+        } else {
+            \Log::warning("No email found for order {$id}");
+        }
+
         return redirect()->back();
 
     }
@@ -72,6 +90,21 @@ class AdminController extends Controller
         $order = Order::find($id);
         $order->delivery_status = "Delivered";
         $order->save();
+
+        // Send email notification
+        $user = $order->user_id ? User::find($order->user_id) : null;
+        $recipientEmail = $user ? $user->email : $order->email;
+        if ($recipientEmail) {
+            try {
+                Mail::to($recipientEmail)->send(new OrderNotification(collect([$order]), $user, 'delivered', $recipientEmail));
+                \Log::info("Email sent to {$recipientEmail} for order {$id} status: delivered");
+            } catch (\Exception $e) {
+                \Log::error("Failed to send email for order {$id}: " . $e->getMessage());
+            }
+        } else {
+            \Log::warning("No email found for order {$id}");
+        }
+
         return redirect()->back();
 
     }
@@ -80,6 +113,21 @@ class AdminController extends Controller
         $order = Order::find($id);
         $order->delivery_status = "Canceled";
         $order->save();
+
+        // Send email notification
+        $user = $order->user_id ? User::find($order->user_id) : null;
+        $recipientEmail = $user ? $user->email : $order->email;
+        if ($recipientEmail) {
+            try {
+                Mail::to($recipientEmail)->send(new OrderNotification(collect([$order]), $user, 'canceled', $recipientEmail));
+                \Log::info("Email sent to {$recipientEmail} for order {$id} status: canceled");
+            } catch (\Exception $e) {
+                \Log::error("Failed to send email for order {$id}: " . $e->getMessage());
+            }
+        } else {
+            \Log::warning("No email found for order {$id}");
+        }
+
         return redirect()->back();
 
     }

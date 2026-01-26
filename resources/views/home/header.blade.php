@@ -8,7 +8,7 @@
         <p class="text-white/70 text-lg">Showcase your signature dishes, manage reservations, and keep every guest touchpoint polished with a cohesive, premium experience.</p>
         <div class="flex flex-wrap items-center gap-3">
             <a class="px-5 py-3 rounded-full bg-gradient-to-br from-accent2 to-accent text-base font-bold text-base/90 hover:shadow-lg hover:shadow-accent/30" href="#blog">View menu</a>
-            <a class="px-4 py-3 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-accent" href="#contact">Book a table</a>
+            <a class="px-4 py-3 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-accent" href="#blog">Book a table</a>
         </div>
         <div class="grid grid-cols-2 gap-4 pt-4">
             <div class="rounded-2xl border border-white/10 bg-card p-4 shadow-lg shadow-black/40">
@@ -17,7 +17,7 @@
             </div>
             <div class="rounded-2xl border border-white/10 bg-card p-4 shadow-lg shadow-black/40">
                 <p class="text-xs uppercase tracking-[0.08em] text-white/60 mb-1">Avg. wait time</p>
-                <div class="text-2xl font-semibold">08 mins</div>
+                <div class="text-2xl font-semibold">30 mins</div>
             </div>
         </div>
     </div>

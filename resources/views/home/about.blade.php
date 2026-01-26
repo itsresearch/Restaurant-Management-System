@@ -49,7 +49,7 @@
                 <p class="text-xs uppercase tracking-[0.08em] text-white/60">Next availability</p>
                 <p class="text-lg font-semibold">Tonight from 6:00 PM</p>
             </div>
-            <a href="#contact" class="px-4 py-2 rounded-full bg-gradient-to-br from-accent2 to-accent text-base font-bold text-base/90">Book a table</a>
+            <a href="#blog" class="px-4 py-2 rounded-full bg-gradient-to-br from-accent2 to-accent text-base font-bold text-base/90">Book a table</a>
         </div>
         <p class="text-white/60 text-sm">Prefer to call? Reach us at +977-9876765454.</p>
     </div>

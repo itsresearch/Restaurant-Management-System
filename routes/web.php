@@ -31,7 +31,7 @@ route::get('/orders',[AdminController::class,'orders']);
 route::get('/on_the_way/{id}',[AdminController::class,'on_the_way']);
 route::get('/delivered/{id}',[AdminController::class,'delivered']);
 route::get('/canceled/{id}',[AdminController::class,'canceled']);
-route::post('/book_table',[HomeController::class,'book_table']);
+route::post('/book_table',[HomeController::class,'book_table'])->middleware('auth');
 route::get('/reservation',[AdminController::class,'reservation']);
 
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');

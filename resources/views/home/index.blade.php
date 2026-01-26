@@ -8,6 +8,10 @@
 
     <!-- Icons -->
     <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+
     <!-- Tailwind CDN preset for quick theming -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -58,5 +62,7 @@
 
     <!-- Map -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtme10pzgKSPeJVJrG1O3tjR6lk98o4w8&callback=initMap"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 </body>
 </html>

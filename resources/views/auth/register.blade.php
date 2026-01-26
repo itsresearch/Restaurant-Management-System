@@ -70,6 +70,28 @@
 
             <!-- Email -->
             <div>
+                <label class="block text-sm font-medium mb-1">Phone</label>
+                <div class="flex items-center border rounded-lg px-3">
+                    <i class="fa fa-envelope text-gray-400"></i>
+                    <input type="phone"
+                           name="phone"
+                           value="{{ old('phone') }}"
+                           required
+                           class="w-full p-2 outline-none text-sm">
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Address</label>
+                <div class="flex items-center border rounded-lg px-3">
+                    <i class="fa fa-envelope text-gray-400"></i>
+                    <input type="address"
+                           name="address"
+                           value="{{ old('address') }}"
+                           required
+                           class="w-full p-2 outline-none text-sm">
+                </div>
+            </div>
+            <div>
                 <label class="block text-sm font-medium mb-1">Email</label>
                 <div class="flex items-center border rounded-lg px-3">
                     <i class="fa fa-envelope text-gray-400"></i>

@@ -14,9 +14,9 @@
     </a>
     <div class="pt-2">
       <p class="px-3 text-xs uppercase tracking-[0.08em] text-white/50 mb-2">Food</p>
-      <a href="{{ url('add_food') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">
+      {{-- <a href="{{ url('add_food') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">
         <span class="ti-plus"></span> Add Food
-      </a>
+      </a> --}}
       <a href="{{ url('view_food') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white">
         <span class="ti-layout-grid2"></span> View Food
       </a>

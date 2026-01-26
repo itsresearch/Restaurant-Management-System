@@ -11,6 +11,7 @@ use App\Models\Book;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use App\Mail\OrderNotification;
 
 class HomeController extends Controller
@@ -123,25 +124,36 @@ public function confirm_order(Request $request)
 
     return view('home.order_success', ['orders' => $cartItems, 'user' => $user]);
 }
-    public function book_table(Request $request){
-        $request->validate([
-            'name' => 'required|string',
-            'phone' => 'required|string',
-            'a_guest' => 'required|integer|min:1|max:10',
-            'time' => 'required',
-            'date' => 'required|date|after:today',
-        ]);
+ public function book_table(Request $request){
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string',
+        'phone' => 'required|string',
+        'email' => 'required|email',
+        'a_guest' => 'required|integer|min:1|max:10',
+        'time' => 'required',
+        'date' => 'required|date|after:today',
+    ]);
 
-            $data = new Book;
-            $data->name = $request->name;
-            $data->phone = $request->phone;
-            $data->phone = $request->phone;
-            $data->guest = $request->a_guest;
-            $data->time = $request->time;
-            $data->date = $request->date;
-            $data -> save();
-            return redirect()->back();
+    if ($validator->fails()) {
+        return redirect('/#blog')->withErrors($validator)->withInput();
+    }
+
+    try {
+        $data = new Book;
+        $data->name = $request->name;
+        $data->phone = $request->phone;
+        $data->email = $request->email;
+        $data->guest = $request->a_guest;
+        $data->time = $request->time;
+        $data->date = $request->date;
+        $data->save();
+        return redirect('/#blog')->with('success', 'Table booked successfully!');
+        } 
+        catch (\Exception $e) {
+            return redirect('/#blog')->with('error', 'Something went wrong. Please try again.');
         }
+}
+
 
 }
 

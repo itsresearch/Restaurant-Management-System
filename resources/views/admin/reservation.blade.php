@@ -44,9 +44,11 @@
                         <tr class="border-b border-white/10">
                             <th class="py-3 pr-4">Name</th>
                             <th class="py-3 pr-4">Phone Number</th>
+                            <th class="py-3 pr-4">Email</th>
                             <th class="py-3 pr-4">Guests</th>
                             <th class="py-3 pr-4">Date</th>
                             <th class="py-3 pr-4">Time</th>
+                            <th class="py-3 pr-4">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
@@ -54,9 +56,14 @@
                         <tr>
                             <td class="py-3 pr-4 font-semibold">{{ $booking->name }}</td>
                             <td class="py-3 pr-4 font-semibold">{{ $booking->phone }}</td>
+                            <td class="py-3 pr-4 font-semibold">{{ $booking->email }}</td>
                             <td class="py-3 pr-4">{{ $booking->guest }}</td>
                             <td class="py-3 pr-4 text-white/70">{{ $booking->date }}</td>
                             <td class="py-3 pr-4 text-white/70">{{ $booking->time }}</td>
+                            <td class="py-3 pr-4 space-x-2">
+                              <a href="" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent2" onclick="return confirm('Are you sure?')">Accept</a>
+                              <a class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent" href="">Reject</a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
