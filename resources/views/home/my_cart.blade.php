@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <script>
         tailwind.config = {
             theme: {
@@ -62,13 +63,15 @@
                     <img src="{{ asset('storage/'.$item->image) }}" class="w-full h-28 object-cover rounded-xl border border-white/10">
                     <div class="sm:col-span-2">
                         <div class="text-lg font-semibold">{{ $item->title }}</div>
-                        <p class="text-sm text-white/70 line-clamp-2">{{ $item->detail }}</p>
+                        <p class="text-sm text-white/70 line-clamp-2">{{ $item->details }}</p>
                     </div>
                     <div class="flex sm:flex-col sm:items-end justify-between gap-2">
                         <div class="text-base font-semibold">Rs {{ $item->price }}</div>
-                        <a onclick="return confirm('Are you sure to remove this item?')"
-                           href="{{ url('remove_cart',$item->id) }}"
-                           class="text-sm text-accent hover:underline">Remove</a>
+                        <form method="POST" action="{{ url('remove_cart', $item->id) }}" onsubmit="return confirm('Are you sure to remove this item?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-sm text-accent hover:underline">Remove</button>
+                        </form>
                     </div>
                 </div>
                 @php $total_price += $item->price; @endphp

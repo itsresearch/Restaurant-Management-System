@@ -76,6 +76,13 @@
             </tfoot>
         </table>
 
+        @if ($hasQr ?? false)
+            <div style="text-align: center; margin: 20px 0;">
+                <p style="margin-bottom: 10px; font-weight: bold;">Scan QR Code for Order Details:</p>
+                <img src="cid:order_qr.png" alt="Order QR Code" style="max-width: 150px; height: auto;">
+            </div>
+        @endif
+
         @if ($status == 'confirmed')
             <p style="margin-top:20px;">Estimated delivery time: <strong>5 minutes</strong></p>
             <p style="margin-top:20px;">We hope you enjoy your meal!</p>

@@ -149,8 +149,15 @@
                             },
                             body: 'qty=1'
                         })
-                        .then(response => {
-                            if (response.ok) {
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Update cart count in navbar
+                                const cartCountElement = document.getElementById('cart-count');
+                                if (cartCountElement) {
+                                    cartCountElement.textContent = data.cart_count;
+                                }
+
                                 // Highlight the card
                                 const card = e.target.closest('.food-item');
                                 card.classList.add('ring-2', 'ring-green-500');
@@ -161,7 +168,8 @@
                                 // Show notification
                                 showNotification(`${name} added to cart!`);
                             } else {
-                                showNotification('Failed to add to cart. Please try again.');
+                                showNotification(data.message ||
+                                    'Failed to add to cart. Please try again.');
                             }
                         })
                         .catch(error => {

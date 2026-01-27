@@ -13,61 +13,73 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\OrderNotification;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
 
 public function my_home(){
 
-    $data = Food:: all();
+    $data = Food::query()->latest()->get();
     return view('home.index', compact('data'));
 }
     //
     public function index(){
-        if (Auth::id()){
-            $usertype= Auth()->user()->usertype;
-
-        if($usertype=='user'){
-                $data = Food:: all();
-
+        if (! Auth::check()) {
+            $data = Food::query()->latest()->get();
             return view('home.index', compact('data'));
         }
 
-        else {
+        $usertype = strtolower((string) (Auth::user()->usertype ?? 'user'));
 
-        $total_user = User::where('usertype','=', 'user')->count();
+        if ($usertype === 'user') {
+            $data = Food::query()->latest()->get();
+            return view('home.index', compact('data'));
+        }
+
+        $total_user = User::where('usertype', '=', 'user')->count();
         $total_food = Food::count();
         $total_order = Order::count();
-        $total_delivered = Order::where('delivery_status','=','delivered')->count();
-            return view('admin.index',compact('total_user','total_food','total_order','total_delivered'));
-        }
-        }
+        $total_delivered = Order::whereIn('delivery_status', ['delivered', 'Delivered'])->count();
+        return view('admin.index', compact('total_user', 'total_food', 'total_order', 'total_delivered'));
     }
 
     public function add_cart(Request $request, $id){
+        $validated = Validator::make($request->all(), [
+            'qty' => ['required', 'integer', 'min:1', 'max:99'],
+        ])->validate();
+
         if (Auth::id()){
-            $food= Food::find($id);
+            $food = Food::findOrFail($id);
 
             $cart_title = $food->title;
             $cart_details = $food->detail;
-            $cart_price = Str::remove('$',$food->price);
+            $cart_price = (float) preg_replace('/[^0-9.]/', '', (string) $food->price);
             $cart_image = $food->image;
 
             $data = new Cart;
             $data->title = $cart_title;
             $data->details = $cart_details;
-            $data->price = $cart_price * $request->qty;
+            $data->price = $cart_price * (int) $validated['qty'];
             $data->image = $cart_image;
-            $data->quantity = $request->qty;
+            $data->quantity = (int) $validated['qty'];
             $data->user_id = Auth()->user()->id;
 
 
 
             $data->save();
 
+            // Update cart count in session
+            $cartCount = Cart::where('user_id', Auth()->user()->id)->sum('quantity');
+            session(['cart_count' => $cartCount]);
            
             if ($request->expectsJson()) {
-                return response()->json(['success' => true, 'message' => 'Item added to cart successfully!']);
+                return response()->json([
+                    'success' => true, 
+                    'message' => 'Item added to cart successfully!',
+                    'cart_count' => $cartCount
+                ]);
             }
 
             return redirect('/#blog')->with('message', 'Item added to cart successfully!');
@@ -89,8 +101,17 @@ public function my_home(){
     }
 
     public function remove_cart($id){
-        $data = Cart::find($id);
+        $data = Cart::findOrFail($id);
+        if ((int) $data->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+        $userId = $data->user_id;
         $data->delete();
+        
+        // Update cart count in session
+        $cartCount = Cart::where('user_id', $userId)->sum('quantity');
+        session(['cart_count' => $cartCount]);
+        
         return redirect()->back();
     }
 
@@ -100,27 +121,54 @@ public function confirm_order(Request $request)
     $user = auth()->user();
     $userId = $user->id;
 
+    $validated = $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'email', 'max:255'],
+        'phone' => ['required', 'string', 'max:30'],
+        'address' => ['required', 'string', 'max:500'],
+    ]);
+
     $cartItems = Cart::where('user_id', $userId)->get();
-
-    Mail::to($user->email)->send(new OrderNotification($cartItems, $user));
-
-    foreach ($cartItems as $cart) {
-        $order = new Order();
-        $order->name = $request->name;
-        $order->email = $request->email;
-        $order->phone = $request->phone;
-        $order->address = $request->address;
-        $order->user_id = $userId;
-
-        $order->title = $cart->title;
-        $order->quantity = $cart->quantity;
-        $order->price = $cart->price;
-        $order->image = $cart->image;
-
-        $order->save();
-
-        $cart->delete(); 
+    if ($cartItems->isEmpty()) {
+        return redirect()->back()->with('message', 'Your cart is empty.');
     }
+
+    DB::beginTransaction();
+    try {
+        foreach ($cartItems as $cart) {
+            $order = new Order();
+            $order->name = $validated['name'];
+            $order->email = $validated['email'];
+            $order->phone = $validated['phone'];
+            $order->address = $validated['address'];
+            $order->user_id = $userId;
+
+            $order->title = $cart->title;
+            $order->quantity = $cart->quantity;
+            $order->price = $cart->price;
+            $order->image = $cart->image;
+            $order->delivery_status = Order::STATUS_IN_PROGRESS;
+
+            $order->save();
+
+            $cart->delete();
+        }
+        DB::commit();
+    } catch (\Throwable $e) {
+        DB::rollBack();
+        Log::error('Order confirm failed: '.$e->getMessage());
+        return redirect()->back()->with('message', 'Failed to place order. Please try again.');
+    }
+
+    // Email should not block order placement
+    try {
+        Mail::to($user->email)->send(new OrderNotification($cartItems, $user));
+    } catch (\Throwable $e) {
+        Log::error('Order email failed: '.$e->getMessage());
+    }
+
+    // Update cart count to 0 after order
+    session(['cart_count' => 0]);
 
     return view('home.order_success', ['orders' => $cartItems, 'user' => $user]);
 }
@@ -129,7 +177,7 @@ public function confirm_order(Request $request)
         'name' => 'required|string',
         'phone' => 'required|string',
         'email' => 'required|email',
-        'a_guest' => 'required|integer|min:1|max:10',
+        'a_guest' => 'required|integer|min:1|max:20',
         'time' => 'required',
         'date' => 'required|date|after:today',
     ]);

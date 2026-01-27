@@ -57,35 +57,44 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5">
-                            @foreach ($data as $data)
+                            @foreach ($data as $order)
                                 <tr>
-                                    <td class="py-3 pr-4 font-semibold">{{ $data->name }}</td>
-                                    <td class="py-3 pr-4 text-white/70">{{ $data->email }}</td>
-                                    <td class="py-3 pr-4 text-white/70">{{ $data->phone }}</td>
-                                    <td class="py-3 pr-4 text-white/70">{{ $data->address }}</td>
-                                    <td class="py-3 pr-4">{{ $data->food_name }}</td>
-                                    <td class="py-3 pr-4">{{ $data->quantity }}</td>
-                                    <td class="py-3 pr-4">Rs {{ $data->price }}</td>
+                                    <td class="py-3 pr-4 font-semibold">{{ $order->name }}</td>
+                                    <td class="py-3 pr-4 text-white/70">{{ $order->email }}</td>
+                                    <td class="py-3 pr-4 text-white/70">{{ $order->phone }}</td>
+                                    <td class="py-3 pr-4 text-white/70">{{ $order->address }}</td>
+                                    <td class="py-3 pr-4">{{ $order->title }}</td>
+                                    <td class="py-3 pr-4">{{ $order->quantity }}</td>
+                                    <td class="py-3 pr-4">Rs {{ $order->price }}</td>
                                     <td class="py-3 pr-4">
-                                        <img src="{{ asset('storage/' . $data->image) }}"
+                                        <img src="{{ asset('storage/' . $order->image) }}"
                                             class="w-16 h-12 object-cover rounded-lg border border-white/10">
                                     </td>
                                     <td class="py-3 pr-4">
                                         <span
-                                            class="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 border border-white/10">{{ $data->delivery_status }}</span>
+                                            class="px-3 py-1 rounded-full text-xs font-semibold bg-white/5 border border-white/10">{{ $order->delivery_status_label }}</span>
                                     </td>
-                                    <td class="py-3 pr-4 space-x-2">
-                                        <a onclick="return confirm('Are you sure to change this?')"
-                                            href="{{ url('on_the_way', $data->id) }}"
-                                            class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent">On
-                                            the Way</a>
-                                        <a onclick="return confirm('Are you sure to change this?')"
-                                            href="{{ url('delivered', $data->id) }}"
-                                            class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent">Delivered</a>
-                                        <a onclick="return confirm('Are you sure to change this?')"
-                                            href="{{ url('canceled', $data->id) }}"
-                                            class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent2">Cancel</a>
-
+                                    <td class="py-3 pr-4">
+                                        <div class="flex flex-wrap gap-2">
+                                            <form method="POST" action="{{ url('orders/'.$order->id.'/on_the_way') }}" onsubmit="return confirm('Are you sure to change this?')">
+                                                @csrf
+                                                <button type="submit" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent">
+                                                    On the Way
+                                                </button>
+                                            </form>
+                                            <form method="POST" action="{{ url('orders/'.$order->id.'/delivered') }}" onsubmit="return confirm('Are you sure to change this?')">
+                                                @csrf
+                                                <button type="submit" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent">
+                                                    Delivered
+                                                </button>
+                                            </form>
+                                            <form method="POST" action="{{ url('orders/'.$order->id.'/canceled') }}" onsubmit="return confirm('Are you sure to change this?')">
+                                                @csrf
+                                                <button type="submit" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent2">
+                                                    Cancel
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

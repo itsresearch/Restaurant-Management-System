@@ -102,6 +102,14 @@
             </button>
         </form>
 
+        <p class="text-center text-sm text-gray-600 mt-5">
+            Don't have an account?
+            <a href="{{ route('register') }}"
+               class="text-yellow-600 font-semibold hover:underline">
+                Register
+            </a>
+        </p>
+
     </div>
 
 </body>

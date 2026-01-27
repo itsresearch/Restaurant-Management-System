@@ -1,7 +1,8 @@
 <header class="fixed top-0 inset-x-0 z-50 bg-base/90 backdrop-blur border-b border-white/10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <a class="flex items-center gap-3 text-white font-semibold" href="{{ url('/') }}">
-            <span class="w-11 h-11 rounded-xl bg-gradient-to-br from-accent2 to-accent grid place-items-center text-base font-bold">RM</span>
+            <span
+                class="w-11 h-11 rounded-xl bg-gradient-to-br from-accent2 to-accent grid place-items-center text-base font-bold">RM</span>
             <div class="leading-tight">
                 <div class="text-sm uppercase tracking-wide text-white/70">Restaurant</div>
                 <div class="text-lg">Management</div>
@@ -19,18 +20,31 @@
         <div class="flex items-center gap-2">
             @if (Route::has('login'))
                 @auth
-                    <a href="{{ url('my_cart') }}" class="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-accent">
+                    <a href="{{ url('my_cart') }}"
+                        class="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-accent relative">
                         <span class="ti-shopping-cart"></span> Cart
+                        <span id="cart-count"
+                            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                            @auth
+                                {{ \App\Models\Cart::where('user_id', auth()->id())->sum('quantity') }}
+                            @else
+                                0
+                            @endauth
+                        </span>
                     </a>
+
                     <form action="{{ route('logout') }}" method="POST" class="m-0">
                         @csrf
-                        <button type="submit" class="px-4 py-2 rounded-full bg-gradient-to-br from-accent2 to-accent text-base font-bold text-base/90 hover:shadow-lg hover:shadow-accent/30">
+                        <button type="submit"
+                            class="px-4 py-2 rounded-full bg-gradient-to-br from-accent2 to-accent text-base font-bold text-base/90 hover:shadow-lg hover:shadow-accent/30">
                             Logout
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="px-3 py-2 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-accent">Login</a>
-                    <a href="{{ route('register') }}" class="px-4 py-2 rounded-full bg-gradient-to-br from-accent2 to-accent text-base font-bold text-base/90 hover:shadow-lg hover:shadow-accent/30">Register</a>
+                    <a href="{{ route('login') }}"
+                        class="px-3 py-2 rounded-full border border-white/10 text-sm font-semibold text-white hover:border-accent">Login</a>
+                    <a href="{{ route('register') }}"
+                        class="px-4 py-2 rounded-full bg-gradient-to-br from-accent2 to-accent text-base font-bold text-base/90 hover:shadow-lg hover:shadow-accent/30">Register</a>
                 @endauth
             @endif
         </div>

@@ -14,5 +14,6 @@ class Book extends Model
         'guest',
         'date',
         'time',
+        'status',
     ];
 }

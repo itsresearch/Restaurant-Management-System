@@ -59,17 +59,21 @@
                     </thead>
 
                     <tbody class="divide-y divide-white/5">
-                      @foreach($data as $data)
+                      @foreach($data as $food)
                         <tr>
-                            <td class="py-3 pr-4 font-semibold">{{ $data->title }}</td>
-                            <td class="py-3 pr-4 text-white/70">{{ $data->detail }}</td>
-                            <td class="py-3 pr-4">Rs {{ $data->price }}</td>
+                            <td class="py-3 pr-4 font-semibold">{{ $food->title }}</td>
+                            <td class="py-3 pr-4 text-white/70">{{ $food->detail }}</td>
+                            <td class="py-3 pr-4">Rs {{ $food->price }}</td>
                             <td class="py-3 pr-4">
-                                <img class="w-20 h-14 object-cover rounded-lg border border-white/10" src="{{ asset('storage/'.$data->image) }}" alt="">
+                                <img class="w-20 h-14 object-cover rounded-lg border border-white/10" src="{{ asset('storage/'.$food->image) }}" alt="">
                             </td>
                             <td class="py-3 pr-4 space-x-2">
-                              <a href="{{url('delete_food',$data->id)}}" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent2" onclick="return confirm('Are you sure?')">Delete</a>
-                              <a class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent" href="{{url('update_food',$data->id)}}">Update</a>
+                              <form method="POST" action="{{ url('delete_food', $food->id) }}" class="inline" onsubmit="return confirm('Are you sure?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent2">Delete</button>
+                              </form>
+                              <a class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs hover:border-accent" href="{{url('update_food',$food->id)}}">Update</a>
                             </td>
                         </tr>
                     @endforeach
