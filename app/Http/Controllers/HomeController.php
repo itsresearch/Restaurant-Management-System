@@ -70,7 +70,6 @@ public function my_home(){
 
             $data->save();
 
-            // Update cart count in session
             $cartCount = Cart::where('user_id', Auth()->user()->id)->sum('quantity');
             session(['cart_count' => $cartCount]);
            
@@ -108,7 +107,6 @@ public function my_home(){
         $userId = $data->user_id;
         $data->delete();
         
-        // Update cart count in session
         $cartCount = Cart::where('user_id', $userId)->sum('quantity');
         session(['cart_count' => $cartCount]);
         
@@ -160,14 +158,12 @@ public function confirm_order(Request $request)
         return redirect()->back()->with('message', 'Failed to place order. Please try again.');
     }
 
-    // Email should not block order placement
     try {
         Mail::to($user->email)->send(new OrderNotification($cartItems, $user));
     } catch (\Throwable $e) {
         Log::error('Order email failed: '.$e->getMessage());
     }
 
-    // Update cart count to 0 after order
     session(['cart_count' => 0]);
 
     return view('home.order_success', ['orders' => $cartItems, 'user' => $user]);
@@ -201,7 +197,5 @@ public function confirm_order(Request $request)
             return redirect('/#blog')->with('error', 'Something went wrong. Please try again.');
         }
 }
-
-
 }
 

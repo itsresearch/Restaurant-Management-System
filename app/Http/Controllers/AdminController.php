@@ -86,47 +86,36 @@ class AdminController extends Controller
         $data = Order::query()->latest()->get();
         return view('admin.orders', compact('data'));
     }
-    public function on_the_way($id){
-        $order = Order::findOrFail($id);
-        $order->delivery_status = Order::STATUS_ON_THE_WAY;
-        $order->save();
+   public function on_the_way($id)
+{
+    $order = Order::findOrFail($id);
+    $order->delivery_status = Order::STATUS_ON_THE_WAY;
+    $order->save();
 
-        // Send email notification
-        $user = $order->user_id ? User::find($order->user_id) : null;
-        $recipientEmail = $user ? $user->email : $order->email;
-        if ($recipientEmail) {
-            try {
-                Mail::to($recipientEmail)->send(new OrderNotification(collect([$order]), $user, 'on_the_way', $recipientEmail));
-                Log::info("Email sent to {$recipientEmail} for order {$id} status: on_the_way");
-            } catch (\Exception $e) {
-                Log::error("Failed to send email for order {$id}: " . $e->getMessage());
-            }
-        } else {
-            Log::warning("No email found for order {$id}");
-        }
+    $user = $order->user_id ? User::find($order->user_id) : null;
+    $recipientEmail = $user ? $user->email : $order->email;
 
-        return redirect()->back();
-
+    if ($recipientEmail) {
+        Mail::to($recipientEmail)->send(
+            new OrderNotification(collect([$order]), $user, 'on_the_way', $recipientEmail)
+        );
     }
+
+    return redirect()->back();
+}
 
         public function delivered($id){
         $order = Order::findOrFail($id);
         $order->delivery_status = Order::STATUS_DELIVERED;
         $order->save();
 
-        // Send email notification
         $user = $order->user_id ? User::find($order->user_id) : null;
         $recipientEmail = $user ? $user->email : $order->email;
         if ($recipientEmail) {
-            try {
+            
                 Mail::to($recipientEmail)->send(new OrderNotification(collect([$order]), $user, 'delivered', $recipientEmail));
-                Log::info("Email sent to {$recipientEmail} for order {$id} status: delivered");
-            } catch (\Exception $e) {
-                Log::error("Failed to send email for order {$id}: " . $e->getMessage());
-            }
-        } else {
-            Log::warning("No email found for order {$id}");
-        }
+            
+        } 
 
         return redirect()->back();
 
@@ -137,20 +126,12 @@ class AdminController extends Controller
         $order->delivery_status = Order::STATUS_CANCELED;
         $order->save();
 
-        // Send email notification
         $user = $order->user_id ? User::find($order->user_id) : null;
         $recipientEmail = $user ? $user->email : $order->email;
         if ($recipientEmail) {
-            try {
+           
                 Mail::to($recipientEmail)->send(new OrderNotification(collect([$order]), $user, 'canceled', $recipientEmail));
-                Log::info("Email sent to {$recipientEmail} for order {$id} status: canceled");
-            } catch (\Exception $e) {
-                Log::error("Failed to send email for order {$id}: " . $e->getMessage());
-            }
-        } else {
-            Log::warning("No email found for order {$id}");
-        }
-
+            } 
         return redirect()->back();
 
     }
@@ -160,13 +141,10 @@ class AdminController extends Controller
         $booking->save();
 
         if ($booking->email) {
-            try {
+            
                 Mail::to($booking->email)->send(new BookingNotification($booking, 'accepted'));
                 Log::info("Email sent to {$booking->email} for booking {$id} status: accepted");
-            } catch (\Exception $e) {
-                Log::error("Failed to send email for booking {$id}: " . $e->getMessage());
-            }
-        }
+            } 
 
         return redirect()->back();
     }
@@ -177,13 +155,10 @@ class AdminController extends Controller
         $booking->save();
 
         if ($booking->email) {
-            try {
+            
                 Mail::to($booking->email)->send(new BookingNotification($booking, 'rejected'));
-                Log::info("Email sent to {$booking->email} for booking {$id} status: rejected");
-            } catch (\Exception $e) {
-                Log::error("Failed to send email for booking {$id}: " . $e->getMessage());
-            }
-        }
+            } 
+        
 
         return redirect()->back();
     }
